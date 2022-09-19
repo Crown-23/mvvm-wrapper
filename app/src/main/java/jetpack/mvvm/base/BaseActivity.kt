@@ -2,12 +2,12 @@ package jetpack.mvvm.base
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.ViewDataBinding
+import androidx.viewbinding.ViewBinding
 
 /**
  * Description：BaseActivity
  */
-abstract class BaseActivity<VB : ViewDataBinding> : AppCompatActivity() {
+abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
     private var _viewBinding: VB? = null
     protected val viewBinding: VB
         get() = checkNotNull(_viewBinding) {
