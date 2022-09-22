@@ -1,11 +1,15 @@
 package jetpack.mvvm.base
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
+import jetpack.mvvm.http.ApiException
 import kotlinx.coroutines.launch
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 /**
  * Description：BaseViewModel
@@ -14,9 +18,8 @@ abstract class BaseViewModel : ViewModel() {
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
 
-    protected fun <T> launch(
-        liveData: MutableLiveData<T>,
-        block: suspend () -> BaseData<T>,
+    protected fun launch(
+        block: suspend () -> Unit,
         error: suspend (Int) -> Unit = {
 
         }
@@ -25,15 +28,18 @@ abstract class BaseViewModel : ViewModel() {
             _dataLoading.value = true
 
             try {
-                val baseData = block()
-                if (baseData.errorCode == 0) {
-                    liveData.value = baseData.data
-                } else {
-                    // TODO: use Toast to show errorMsg
-                    error(baseData.errorCode)
-                }
+                block.invoke()
             } catch (e: Exception) {
-                // TODO: use Toast to show exception message
+                when (e) {
+                    is ApiException -> {
+                        // TODO: use Toast to show errorMsg
+                        error(e.code)
+                    }
+                    is ConnectException, is UnknownHostException, is SocketTimeoutException -> {
+                        // TODO: use Toast to show exception message
+                        Log.e("Exception", e.localizedMessage)
+                    }
+                }
             } finally {
                 _dataLoading.value = false
             }

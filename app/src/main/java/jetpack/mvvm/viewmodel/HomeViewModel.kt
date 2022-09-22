@@ -18,8 +18,9 @@ class HomeViewModel : BaseViewModel() {
     val hotkeyText: LiveData<String> = _hotkeyText
 
     fun hotkeys() {
-        launch(hotkeyList, {
-            repository.hotkeys()
+        launch({
+            hotkeyList.value = repository.hotkeys()
+            repository.banners()
         })
     }
 

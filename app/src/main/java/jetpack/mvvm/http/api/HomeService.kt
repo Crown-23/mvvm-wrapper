@@ -10,4 +10,7 @@ import retrofit2.http.GET
 interface HomeService {
     @GET("hotkey/json")
     suspend fun hotkeys(): BaseData<List<HotkeyModel>>
+
+    @GET("banner/json")
+    suspend fun banners(): BaseData<List<Any>>
 }
