@@ -7,16 +7,16 @@ import jetpack.mvvm.model.HotkeyModel
 /**
  * Description：HomeRepository
  */
-class HomeRepository : BaseRepository() {
+class HomeRepository constructor(private val homeService: HomeService) : BaseRepository() {
     suspend fun hotkeys(): List<HotkeyModel> {
         return request {
-            apiService(HomeService::class.java).hotkeys()
+            homeService.hotkeys()
         }
     }
 
     suspend fun banners(): List<Any> {
         return request {
-            apiService(HomeService::class.java).banners()
+            homeService.banners()
         }
     }
 }

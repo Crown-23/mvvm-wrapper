@@ -9,9 +9,7 @@ import java.lang.StringBuilder
 /**
  * Description：HomeViewModel
  */
-class HomeViewModel : BaseViewModel() {
-    private val repository by lazy { HomeRepository() }
-
+class HomeViewModel constructor(private val homeRepository: HomeRepository) : BaseViewModel() {
     private val hotkeyList = MutableLiveData<List<HotkeyModel>>()
 
     private var _hotkeyText: LiveData<String> = hotkeyList.distinctUntilChanged().map { createHotkeyText(it) }
@@ -19,8 +17,8 @@ class HomeViewModel : BaseViewModel() {
 
     fun hotkeys() {
         launch({
-            hotkeyList.value = repository.hotkeys()
-            repository.banners()
+            hotkeyList.value = homeRepository.hotkeys()
+            homeRepository.banners()
         })
     }
 
